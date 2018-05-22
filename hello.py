@@ -7,6 +7,7 @@ target = "Hello world"
 
 
 class Individual:
+    ind_count = 0
 
     def __init__(self, case=None):
         if case is None:
@@ -14,6 +15,7 @@ class Individual:
         else:
             self.case = case
         self.score = calculate_fitness(self.case, target)
+        Individual.ind_count += 1
 
     def __str__(self):
         return "Case: {}\nScore: {}".format(self.case, self.score)
@@ -127,7 +129,8 @@ def calculate_fitness(guess, solution):
 
 def conclusion(guess):
     print "\n---\nIndividual: {}\nSolution: {}".format(guess, target)
-    print "It took {} generations to reach the target\n---".format(
+    print "{} individuals were created.".format(Individual.ind_count)
+    print "{} generations to reach the target.\n---".format(
         Generation.gen_count)
     exit()
 
