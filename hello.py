@@ -3,6 +3,7 @@ import random
 from collections import Counter
 
 population_size = 10
+test_lengt = 50
 target = "Hello world"
 
 
@@ -138,7 +139,7 @@ def conclusion(guess):
 def execute():
     current_gen = Generation()
     next_gen = current_gen
-    for x in range(50):
+    for x in range(test_length):
         temp = next_gen
         next_gen = generation_mutate(current_gen)
         current_gen = temp
