@@ -111,7 +111,7 @@ def select_fittest(gen):
             fittest = individual
     if fittest is None:
         fittest = random.choice(gen.individuals)
-    print "fittest is: {} with score {}".format(fittest.case, fittest.score)
+    print "fittest is: '{}' with score {}".format(fittest.case, fittest.score)
     return fittest
 
 
