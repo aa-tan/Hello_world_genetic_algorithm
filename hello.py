@@ -37,6 +37,10 @@ class Generation:
         Generation.gen_count += 1
 
     def __str__(self):
+        fittest = select_fittest(self)
+        return "Case: {}\nScore: {}\n".format(fittest.case, fittest.score)
+
+    def get_all_individuals(self):
         ret = ""
         for item in self.individuals:
             ret += "{}\n".format(item)
@@ -132,8 +136,11 @@ def recurse(gen):
 
 
 def execute():
-    gen_1 = Generation()
-    recurse(gen_1)
+    current_gen = Generation()
+    next_gen = current_gen
+    for x in range(100):
+        next_gen = generation_mutate(current_gen)
+        print next_gen
     return 0
 
 if __name__ == "__main__":
