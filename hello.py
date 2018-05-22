@@ -7,7 +7,6 @@ target = "Hello world"
 
 
 class Individual:
-    # global target
 
     def __init__(self, case=None):
         if case is None:
@@ -20,7 +19,7 @@ class Individual:
         return "Case: {}\nScore: {}".format(self.case, self.score)
 
 
-def random_string(length=11, characters=string.ascii_lowercase):
+def random_string(length=11, characters=string.ascii_letters+" "):
     return ''.join(random.choice(characters) for _ in range(length))
 
 
@@ -48,7 +47,7 @@ class Generation:
 
 
 def individual_mutate(fittest):
-    extracted = random_select(fittest)
+    extracted = get_match(fittest)
     base = create_base(extracted)
     mutation = insert_random(base)
     case = create_case(mutation)
@@ -70,7 +69,7 @@ def generation_mutate(gen):
 def insert_random(base):
     mutation = base
     for index, char in enumerate(mutation):
-        if char is "":
+        if mutation[index] == "":
             mutation[index] = random_string(1)
     return mutation
 
@@ -81,7 +80,14 @@ def random_select(fittest):
     for count in range(to_select):
         value = random.choice(fittest.case)
         index = fittest.case.index(value)
-        extracted.append({"val": value, "ind": index})
+    return extracted
+
+
+def get_match(fittest):
+    extracted = []
+    for index, char in enumerate(fittest.case):
+        if char == target[index]:
+            extracted.append({"val": char, "ind": index})
     return extracted
 
 
@@ -103,44 +109,36 @@ def select_fittest(gen):
         if individual.score > max:
             max = individual.score
             fittest = individual
+    if fittest is None:
+        fittest = random.choice(gen.individuals)
+    print "fittest is: {} with score {}".format(fittest.case, fittest.score)
     return fittest
 
 
-def fill_in_string():
-
-    return 0
-
-
 def calculate_fitness(guess, solution):
-    guess_counter = Counter(guess)
-    solution_counter = Counter(solution)
     fitness = 0
-    for index, item in guess_counter.iteritems():
-        fitness += min(item, solution_counter[index])
     for index, item in enumerate(guess):
         if item == solution[index]:
             fitness += 1
-    if fitness == len(target)*2:
-        print "guess: {}\nsolution: {}\n are the same".format(guess, solution)
-        print "it took {} generations".format(Generation.gen_count)
-        exit()
+    if fitness == len(target):
+        conclusion(guess)
     return fitness
 
 
-def recurse(gen):
-    if Generation.gen_count > 100:
-        print gen
-        exit()
-    next_gen = generation_mutate(gen)
-    recurse(next_gen)
+def conclusion(guess):
+    print "\n---\nIndividual: {}\nSolution: {}".format(guess, target)
+    print "It took {} generations to reach the target\n---".format(
+        Generation.gen_count)
+    exit()
 
 
 def execute():
     current_gen = Generation()
     next_gen = current_gen
-    for x in range(100):
+    for x in range(50):
+        temp = next_gen
         next_gen = generation_mutate(current_gen)
-        print next_gen
+        current_gen = temp
     return 0
 
 if __name__ == "__main__":
